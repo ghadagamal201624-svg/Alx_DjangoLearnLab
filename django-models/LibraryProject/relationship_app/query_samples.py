@@ -24,12 +24,8 @@ def create_and_test_data():
     
     # --- 1. إنشاء بيانات عينة ---
     
-    # المتغيرات الأساسية للبيانات
-    author_name_target = 'Ahmed Khaled Tawfik'
-    library_name_target = 'Main City Library'
-
     # المؤلفين
-    author_a, _ = Author.objects.get_or_create(name=author_name_target)
+    author_a, _ = Author.objects.get_or_create(name='Ahmed Khaled Tawfik')
     author_b, _ = Author.objects.get_or_create(name='Naguib Mahfouz')
 
     # الكتب (ForeignKey)
@@ -38,6 +34,7 @@ def create_and_test_data():
     book_3, _ = Book.objects.get_or_create(title='Palace Walk', author=author_b)
     
     # المكتبة
+    library_name_target = 'Main City Library'
     library_main, _ = Library.objects.get_or_create(name=library_name_target)
     
     # أمين المكتبة (OneToOneField)
@@ -53,13 +50,14 @@ def create_and_test_data():
     
     
     # ====================================================================
-    # Task 1: Query all books by a specific author. 
+    # Task 1: Query all books by a specific author. (حل الخطأ الأخير)
     # ====================================================================
     
-    # 1. جلب كائن المؤلف
+    # 1. جلب كائن المؤلف (Author.objects.get(name=author_name))
+    author_name_target = 'Ahmed Khaled Tawfik'
     target_author = Author.objects.get(name=author_name_target) 
     
-    # 2. الاستعلام باستخدام filter() 
+    # 2. الاستعلام باستخدام filter() (الاستعلام المطلوب: .objects.filter(author=author))
     author_books = Book.objects.filter(author=target_author) 
     
     sys.stdout.write("Query all books by a specific author:\n")
@@ -68,10 +66,10 @@ def create_and_test_data():
     
     
     # ====================================================================
-    # Task 2: List all books in a library. 
+    # Task 2: List all books in a library. (حل الخطأ الذي قبله)
     # ====================================================================
     
-    # 1. جلب كائن المكتبة
+    # 1. جلب كائن المكتبة (Library.objects.get(name=library_name))
     target_library = Library.objects.get(name=library_name_target)
     
     # 2. الاستعلام: استخدام ManyToMany field 'books'
@@ -83,11 +81,11 @@ def create_and_test_data():
 
 
     # ====================================================================
-    # Task 3: Retrieve the librarian for a library. (تم التعديل هنا)
+    # Task 3: Retrieve the librarian for a library. (هذا كان صحيحاً)
     # ====================================================================
     
-    # الاستعلام المطلوب: Librarian.objects.get(library=...)
-    target_librarian = Librarian.objects.get(library=target_library)
+    # الاستعلام: استخدام OneToOne field العكسي
+    target_librarian = target_library.librarian
     
     sys.stdout.write("\nRetrieve the librarian for a library:\n")
     sys.stdout.write(f"- Librarian Name: {target_librarian.name} (Library: {target_library.name})\n")
