@@ -5,6 +5,9 @@ from django.contrib.auth.models import User # إضافة محتملة قد يط�
 from django.contrib.auth import login 
 from django.contrib.auth import views as auth_views 
 from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import user_passes_test
+# يجب استيراد النماذج والتوابع الأخرى في بداية الملف
+from .models import UserProfile
 from .models import Book, Library, Author # إضافة Author لاستكمال الاستيرادات
 
 # 1. Function-based View (FBV) for books 
@@ -33,3 +36,22 @@ def register_view(request):
 
         
     return render(request, 'relationship_app/register.html', {'form': form})
+# relationship_app/views.py (الـ Views الجديدة)
+
+# Admin View
+@user_passes_test(is_admin, login_url='/login/')
+def admin_view(request):
+    # مسار القالب المطلوب للتحقق
+    return render(request, 'relationship_app/admin_view.html', {'role': 'Admin'})
+
+# Librarian View
+@user_passes_test(is_librarian, login_url='/login/')
+def librarian_view(request):
+    # مسار القالب المطلوب للتحقق
+    return render(request, 'relationship_app/librarian_view.html', {'role': 'Librarian'})
+
+# Member View
+@user_passes_test(is_member, login_url='/login/')
+def member_view(request):
+    # مسار القالب المطلوب للتحقق
+    return render(request, 'relationship_app/member_view.html', {'role': 'Member'})
