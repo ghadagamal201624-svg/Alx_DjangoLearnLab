@@ -81,15 +81,18 @@ def create_and_test_data():
 
 
     # ====================================================================
-    # Task 3: Retrieve the librarian for a library. (هذا كان صحيحاً)
+    # Task 3: Retrieve the librarian for a library. (حل الخطأ الأخير)
     # ====================================================================
     
-    # الاستعلام: استخدام OneToOne field العكسي
-    target_librarian = target_library.librarian
+    # يجب أولاً جلب كائن المكتبة (target_library) كما فعلنا في المهمة 2
+    # target_library = Library.objects.get(name=library_name_target)
     
+    # الاستعلام المطلوب: جلب أمين المكتبة باستخدام كائن المكتبة كمرجع (library=...)
+    target_librarian = Librarian.objects.get(library=target_library) 
+    
+    # طباعة النتائج
     sys.stdout.write("\nRetrieve the librarian for a library:\n")
     sys.stdout.write(f"- Librarian Name: {target_librarian.name} (Library: {target_library.name})\n")
-
 
 if __name__ == '__main__':
     create_and_test_data()
