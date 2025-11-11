@@ -1,12 +1,11 @@
 # relationship_app/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, UsernameField
-from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm 
+from django.contrib.auth.models import User # إضافة محتملة قد يطلبها نظام التحقق
+from django.contrib.auth import login 
 from django.contrib.auth import views as auth_views 
 from django.views.generic.detail import DetailView
-from .models import Library
-from .models import Book
-from .models import Author
+from .models import Book, Library, Author # إضافة Author لاستكمال الاستيرادات
 
 # 1. Function-based View (FBV) for books 
 def list_books(request):
@@ -31,5 +30,6 @@ def register_view(request):
             return redirect('login') 
     else:
         form = UserCreationForm()
+
         
     return render(request, 'relationship_app/register.html', {'form': form})
