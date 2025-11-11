@@ -124,3 +124,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# AUTHENTICATION SETTINGS
+# -----------------
+# مسار التحويل بعد تسجيل الدخول بنجاح
+LOGIN_REDIRECT_URL = '/books/' 
+
+# مسار تسجيل الدخول إذا حاول المستخدم الوصول لصفحة محمية
+LOGIN_URL = '/login/'
+
