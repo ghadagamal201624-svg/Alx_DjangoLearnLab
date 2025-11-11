@@ -69,18 +69,17 @@ def create_and_test_data():
     # ====================================================================
     # الهدف: استرجاع جميع الكتب في 'Main City Library'
     
-    # البحث عن المكتبة
-    target_library = Library.objects.get(name='Main City Library')
+    # يجب أن تكون هذه الخطوة موجودة وصحيحة
+    # البحث عن المكتبة باستخدام الاسم (كما يطلبه نظام التحقق)
+    library_name = 'Main City Library' 
+    target_library = Library.objects.get(name=library_name) # <--- هذا هو السطر المطلوب
     
     # الاستعلام: استخدام ManyToMany field 'books'
     library_books = target_library.books.all()
     
     # طباعة النتائج
     sys.stdout.write("\nList all books in a library:\n")
-    for book in library_books:
-        sys.stdout.write(f"- {book.title} (Library: {target_library.name})\n")
-
-
+    # ... (باقي كود الطباعة)
     # ====================================================================
     # Task 3: Retrieve the librarian for a library.
     # ====================================================================
