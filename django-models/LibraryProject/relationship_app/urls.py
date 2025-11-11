@@ -1,12 +1,15 @@
 # relationship_app/urls.py
+
 from django.urls import path
-from . import views
-from .views import LibraryDetailView
+
+# يجب استيراد الدالة باسمها الصريح
+from .views import list_books, LibraryDetailView 
 
 urlpatterns = [
-    # FBV
-    path('books/', views.book_list_view, name='book-list'),
-    
-    # CBV
+    # 1. Function-based View (FBV)
+    # استخدام اسم الدالة الجديد list_books
+    path('books/', list_books, name='book-list'), 
+
+    # 2. Class-based View (CBV)
     path('libraries/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'),
 ]

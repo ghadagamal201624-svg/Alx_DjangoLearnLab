@@ -6,7 +6,7 @@ from .models import Book
 from .models import Author
 
 # 1. Function-based View (FBV) for books 
-def book_list_view(request):
+def list_books(request):
     all_books = Book.objects.all()
     context = {'books': all_books}
     return render(request, 'relationship_app/list_books.html', context)
