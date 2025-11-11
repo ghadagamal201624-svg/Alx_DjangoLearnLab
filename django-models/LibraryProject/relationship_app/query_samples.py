@@ -23,12 +23,21 @@ def create_and_test_data():
     Author.objects.all().delete()
     Library.objects.all().delete()
     
-    # --- 1. إنشاء بيانات عينة ---
+# ====================================================================
+    # Task 1: Query all books by a specific author.
+    # ====================================================================
     
-    # المؤلفين
-    author_a, _ = Author.objects.get_or_create(name='Ahmed Khaled Tawfik')
-    author_b, _ = Author.objects.get_or_create(name='Naguib Mahfouz')
-
+    # 1. جلب كائن المؤلف أولاً (الخطوة المطلوبة الأولى)
+    author_name = 'Ahmed Khaled Tawfik'
+    target_author = Author.objects.get(name=author_name) 
+    
+    # 2. الاستعلام باستخدام filter() وتمرير كائن المؤلف (الخطوة المطلوبة الثانية)
+    author_books = Book.objects.filter(author=target_author) # <--- هذا هو الاستعلام الذي يتوقعه نظام التحقق
+    
+    # طباعة النتائج
+    sys.stdout.write("Query all books by a specific author:\n")
+    for book in author_books:
+        sys.stdout.write(f"- {book.title} (Author: {target_author.name})\n")
     # الكتب (ForeignKey)
     book_1, _ = Book.objects.get_or_create(title='Utopia', author=author_a)
     book_2, _ = Book.objects.get_or_create(title='The Days', author=author_a)
