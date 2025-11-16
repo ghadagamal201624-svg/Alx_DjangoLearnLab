@@ -132,3 +132,20 @@ LOGIN_REDIRECT_URL = '/books/'
 # مسار تسجيل الدخول إذا حاول المستخدم الوصول لصفحة محمية
 LOGIN_URL = '/login/'
 
+
+# settings.py
+
+# إخبار Django باستخدام نموذج CustomUser الموجود في تطبيق 'bookshelf'
+AUTH_USER_MODEL = 'bookshelf.CustomUser' 
+
+
+# ------------------------------------
+# 2. MEDIA FILES CONFIGURATION (مطلوب لـ ImageField)
+# ------------------------------------
+import os # يجب أن يكون هذا الاستيراد في بداية الملف، أو نستخدمه هنا إذا لم يكن موجودًا
+
+# تعريف المسار الأساسي (إذا لم يكن BASE_DIR مستورداً)
+# BASE_DIR = Path(__file__).resolve().parent.parent 
+MEDIA_URL = '/media/'
+# تحديد المسار الفعلي حيث سيتم تخزين ملفات الصور
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
