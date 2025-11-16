@@ -1,15 +1,25 @@
 from django.contrib import admin
-from .models import Book 
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, UserProfile 
 
-class BookAdmin(admin.ModelAdmin):
-    # table colum 
-    list_display = ('title', 'author', 'publication_year')
+# --- 1. Custom Admin Model لـ CustomUser ---
+class CustomUserAdmin(UserAdmin):
+    # الحقول التي ستظهر في قائمة المستخدمين
+    list_display = UserAdmin.list_display + ('date_of_birth',)
     
-    # 2.search 
-    search_fields = ('title', 'author')
+    # الحقول التي ستظهر عند عرض/تعديل مستخدم موجود
+    fieldsets = UserAdmin.fieldsets + (
+        ('Custom Info', {'fields': ('date_of_birth', 'profile_photo')}),
+    )
     
-    # 3.filter
-    list_filter = ('publication_year',)
+    # الحقول التي ستظهر عند إنشاء مستخدم جديد في لوحة الإدارة
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+    )
 
+# --- 2. التسجيل (السطر المطلوب) ---
+# هذا هو السطر الذي يتوقعه نظام التحقق
+admin.site.register(CustomUser, CustomUserAdmin) 
 
-admin.site.register(Book, BookAdmin)
+# تسجيل UserProfile أيضاً لتمكين إدارة الأدوار
+admin.site.register(UserProfile)
