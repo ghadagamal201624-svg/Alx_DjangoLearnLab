@@ -5,6 +5,7 @@ from . import views # <-- استيراد شامل
 from django.contrib.auth.views import LoginView, LogoutView 
 from .views import admin_view, librarian_view, member_view
 from .views import add_book_view, edit_book_view, delete_book_view
+from .views import secured_book_list_viwe, book_create_view, book_edit_view, book_delete_view
 
 urlpatterns = [
     # مسارات التطبيق
@@ -29,7 +30,29 @@ urlpatterns = [
     # الالتزام بصيغة التحقق (views.register_view)
     path('register/', views.register_view, name='register'),
 
-# 1. مسار Admin
+    # 1. مسار Admin
+    path('admin_area/', admin_view, name='admin_view'),
+    
+    # 2. مسار Librarian
+    path('librarian_area/', librarian_view, name='librarian_view'),
+    
+    # 3. مسار Member
+    path('member_area/', member_view, name='member_view'),
+
+    #view
+    path('books/secured_list/', secured_book_list_viwe, name='secured_book_list'),
+
+    #create 
+    path('books/secure_create/', book_create_view, name='secure_create'),
+
+    #edite
+    path('book/secure_edite/<int:pk>/', book_edit_view, name='secure_edit'),
+
+    # Delete
+    path('books/secure_delete/<int:pk>/', book_delete_view, name='secure_delete'),
+
+
+    # 1. مسار Admin
     path('admin_area/', admin_view, name='admin_view'),
     
     # 2. مسار Librarian
