@@ -141,7 +141,7 @@ LOGIN_URL = '/login/'
 # CUSTOM USER MODEL CONFIGURATION
 # -----------------
 # إخبار Django باستخدام النموذج المخصص
-AUTH_USER_MODEL = 'relationship_app.CustomUser' 
+AUTH_USER_MODEL = 'bookshelf.CustomUser' 
 
 # إعدادات رفع الملفات (مطلوبة لـ ImageField)
 import os
