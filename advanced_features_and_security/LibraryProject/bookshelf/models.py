@@ -89,6 +89,22 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.email}'s Profile"
 
+# 1. تعريف Book مرة واحدة فقط، ويجب أن يسبق Library
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    publication_year = models.IntegerField(default=2000) # تأكدي من وجود هذا الحقل هنا فقط
+    class Meta:
+        # ترتيب الأذونات: (اسم الكود, الاسم الواضح)
+        permissions = [
+            ("can_view", "Can view book list and details"),
+            ("can_create", "Can add new book entries"),
+            ("can_edit", "can modify existing book entries"),
+            ("can_delet", "can delete book entries")
+            ("can_add_book", "Can add new book entries"),
+            ("can_change_book", "Can edit existing book entries"),
+            ("can_delete_book", "Can delete book entries"),
+        ]
 # ----------------------------------------------------
 # 4. Signals (الإشارات لإنشاء ملف التعريف تلقائياً)
 # ----------------------------------------------------

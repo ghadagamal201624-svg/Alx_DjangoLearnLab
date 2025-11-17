@@ -46,10 +46,6 @@ class Book(models.Model):
     class Meta:
         # ترتيب الأذونات: (اسم الكود, الاسم الواضح)
         permissions = [
-            ("can_view", "Can view book list and details"),
-            ("can_create", "Can add new book entries"),
-            ("can_edit", "can modify existing book entries"),
-            ("can_delet", "can delete book entries")
             ("can_add_book", "Can add new book entries"),
             ("can_change_book", "Can edit existing book entries"),
             ("can_delete_book", "Can delete book entries"),
