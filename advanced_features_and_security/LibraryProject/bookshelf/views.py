@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .forms import Exampleform 
 
 #4. View لعرض كتاب (يتطلب إذن 'can_view')
 @permission_required('relationship_app.can_view', login_url='/login/')
