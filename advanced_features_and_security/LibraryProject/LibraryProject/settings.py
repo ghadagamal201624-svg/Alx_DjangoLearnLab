@@ -148,3 +148,32 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ------------------------------------
+# 1. SECURITY SETTINGS FOR PRODUCTION 
+# ------------------------------------
+# DEBUG = False
+
+# متطلبات HTTPS: التأكد من إرسال الكوكيز عبر HTTPS فقط
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# متطلبات HTTPS: التحويل إلى HTTPS وحماية النقل
+SECURE_SSL_REDIRECT = True # إجبار جميع الاتصالات على استخدام HTTPS
+SECURE_HSTS_SECONDS = 3600 # يخبر المتصفحات بفرض HTTPS لمدة ساعة (يجب زيادتها في الإنتاج)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# حماية XSS ومنع تصفح المحتوى (Browser Protections)
+X_FRAME_OPTIONS = 'DENY' # منع Clickjacking (السماح فقط إذا كانت القيمة SAMEORIGIN)
+SECURE_BROWSER_XSS_FILTER = True # تفعيل فلترة XSS المدمجة في المتصفح
+SECURE_CONTENT_TYPE_NOSNIFF = True # منع المتصفح من محاولة تخمين نوع المحتوى
+
+# ------------------------------------
+# 2. CONTENT SECURITY POLICY (CSP)
+# ----------------------------------
+CSP_DEFAULT_SRC = ("'self'",) # السماح فقط بالتحميل من نفس المصدر
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'") # السماح بخطوط جوجل
+CSP_SCRIPT_SRC = ("'self'",) # السماح فقط بالسكربتات من نفس المصدر
+CSP_IMG_SRC = ("'self'", "data:") # السماح بالصور المضمنة
+CSP_REPORT_ONLY = False # فرض السياسة (بدلاً من الإبلاغ عنها فقط)

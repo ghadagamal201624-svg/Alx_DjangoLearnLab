@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.detail import DetailView
 from .models import Book, Library, Author, UserProfile # استيراد النماذج المطلوبة
 from django.contrib.auth import login # للامتثال لمتطلبات التحقق السابقة
+from django.db.models import Q #لإظهار الاستعلامات الامنيه
 # Note: No need to import User or auth_views directly if using CustomUser/built-in views
 
 
@@ -33,6 +34,20 @@ def list_books(request):
     all_books = Book.objects.all()
     context = {'books': all_books}
     return render(request, 'relationship_app/list_books.html', context)
+
+def secure_search_view(request):
+    search_query = request.GET.get('q', '') # جلب مدخلات المستخدم بأمان
+    if search_query:
+        # 1. استخدام ORM: يقوم Django بتعقيم (Sanitize) المدخلات تلقائيًا.
+        results = Book.objects.filter(
+            Q(title__icontains=search_query) | Q(author__name__icontains=search_query)
+        )
+    else:
+        results = Book.objects.all()
+
+    # 2. التحقق من صحة المدخلات (مطلوب في المهام السابقة): يجب أن يتم التحقق في Forms
+    
+    return render(request, 'bookshelf/book_list.html', {'books': results})
 
 # ------------------------------------
 # 2. Class-based View (CBV)
@@ -106,24 +121,3 @@ def delete_book_view(request, pk):
         'permission_granted': True
     })
 
-#4. View لعرض كتاب (يتطلب إذن 'can_view')
-@permission_required('relationship_app.can_view', login_url='/login/')
-def secured_book_list_viwe(request):
-    all_books = Book.objects.all()
-    return render(request, 'relashionship_app/list_book.html', {'books': all:books})
-
-# 5. View لإنشاء كتاب (يتطلب إذن 'can_create')
-@permission_required('relationship_app.can_create', raise_exception=true)
-def book_create_viwe(request):
-    return render(request, 'relationship_app/permission_message.html', {'action': 'Create Book'})
-
-# 6. View لتعديل كتاب (يتطلب إذن 'can_edit')
-def book_edit_view(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    return render(request, 'relationship_app/permission_message.html', {'action': f'Edit {book.title}'})
-
-# 4. View لحذف كتاب (يتطلب إذن 'can_delete')
-@permission_required('relationship_app.can_delete', raise_exception=True)
-def book_delete_view(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    return render(request, 'relationship_app/permission_message.html', {'action': f'Delete {book.title}'})
