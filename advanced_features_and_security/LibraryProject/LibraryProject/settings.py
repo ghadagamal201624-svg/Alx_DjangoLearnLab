@@ -177,3 +177,45 @@ CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'") # 
 CSP_SCRIPT_SRC = ("'self'",) # السماح فقط بالسكربتات من نفس المصدر
 CSP_IMG_SRC = ("'self'", "data:") # السماح بالصور المضمنة
 CSP_REPORT_ONLY = False # فرض السياسة (بدلاً من الإبلاغ عنها فقط)
+
+# ----------------------------------------------------
+# 1. ENFORCING HTTPS AND HSTS 
+# ----------------------------------------------------
+
+# يُفعل التوجيه الإجباري (Redirect) لجميع طلبات HTTP إلى HTTPS
+SECURE_SSL_REDIRECT = True 
+
+# HSTS: يُخبر المتصفحات بفرض الاتصال عبر HTTPS لهذه المدة الزمنية (سنة واحدة)
+# يجب أن تكون هذه القيمة صفراً أثناء التطوير، ولكنها عالية في الإنتاج
+SECURE_HSTS_SECONDS = 31536000 
+
+# HSTS: يشمل جميع النطاقات الفرعية (Subdomains)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# HSTS: يسمح بإدراج النطاق في قائمة HSTS Preload للمتصفحات (أعلى درجات الأمان)
+SECURE_HSTS_PRELOAD = True 
+
+
+# ----------------------------------------------------
+# 2. SECURE COOKIES 
+# ----------------------------------------------------
+
+# يضمن أن ملفات تعريف ارتباط الجلسة (Session Cookies) تُرسل فقط عبر HTTPS
+SESSION_COOKIE_SECURE = True
+
+# يضمن أن ملفات تعريف ارتباط CSRF تُرسل فقط عبر HTTPS
+CSRF_COOKIE_SECURE = True
+
+
+# ----------------------------------------------------
+# 3. SECURE HEADERS
+# ----------------------------------------------------
+
+# منع Clickjacking: يمنع الموقع من التضمين في إطار iframe خارجي
+X_FRAME_OPTIONS = 'DENY'
+
+# حماية MIME-Sniffing: يمنع المتصفح من محاولة تخمين نوع المحتوى
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# حماية XSS: تفعيل فلترة XSS المدمجة في المتصفح (على الرغم من أن Django يوفر حماية XSS)
+SECURE_BROWSER_XSS_FILTER = True
