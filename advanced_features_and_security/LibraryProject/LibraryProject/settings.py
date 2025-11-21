@@ -219,3 +219,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # حماية XSS: تفعيل فلترة XSS المدمجة في المتصفح (على الرغم من أن Django يوفر حماية XSS)
 SECURE_BROWSER_XSS_FILTER = True
+
+# إعدادات لتمكين الثقة في الاتصالات عبر Proxy (مطلوب لـ HTTPS)
+# ------------------------------------
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
