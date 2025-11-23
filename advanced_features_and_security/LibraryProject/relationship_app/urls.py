@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .views import admin_view, librarian_view, member_view
 from .views import add_book_view, edit_book_view, delete_book_view
 from .views import secured_book_list_viwe, book_create_view, book_edit_view, book_delete_view
+from .views import LibraryDetailView
 
 urlpatterns = [
     # مسارات التطبيق
@@ -60,6 +61,8 @@ urlpatterns = [
     
     # 3. مسار Member
     path('member_area/', member_view, name='member_view'),
+
+    path('libraries/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'),
 ] 
 
 
