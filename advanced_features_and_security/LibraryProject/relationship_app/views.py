@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.forms import UserCreationForm 
 from django.views.generic.detail import DetailView
-from .models import Library, Book, Author, UserProfile
+from .models import Library
+from .models import Book, Author, UserProfile
 from django.contrib.auth import login # للامتثال لمتطلبات التحقق السابقة
 from django.db.models import Q #لإظهار الاستعلامات الامنيه
 # Note: No need to import User or auth_views directly if using CustomUser/built-in views
