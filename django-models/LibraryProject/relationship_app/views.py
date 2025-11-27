@@ -1,15 +1,14 @@
 # relationship_app/views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import permission_required
+from django.shortcuts import render
+from django.views.generic import DetailView
+from .models import Library
+from .models import Book 
+from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm 
-from django.contrib.auth.models import User # إضافة محتملة قد يطلبها نظام التحقق
-from django.contrib.auth import login 
-from django.contrib.auth import views as auth_views 
-from django.views.generic.detail import DetailView
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-# يجب استيراد النماذج والتوابع الأخرى في بداية الملف
-from .models import UserProfile
-from .models import Book, Library, Author # إضافة Author لاستكمال الاستيرادات
+
+
 
 # 1. Function-based View (FBV) for books 
 def list_books(request):
