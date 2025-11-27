@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Author, Book
 from datetime import date 
 
-class BookSerializer(serializers.ModelSerializer):
+class Bookserializer(serializers.ModelSerializer):
     """
     Serializer for the Book model.
     Handles serialization of book fields and custom validation for publication_year.
@@ -21,17 +21,16 @@ class BookSerializer(serializers.ModelSerializer):
         return value
     
     
-class AuthorSerializer(serializers.ModelSerializer):
+class Authorserializer(serializers.ModelSerializer):
     """
-    Serializer for the Author model.
+    serializer for the Author model.
     Includes a nested BookSerializer to display related books dynamically.
     """
-    # Nested Serializer:
+    # Nested serializer:
     # many=True: لأن المؤلف قد يكون له أكثر من كتاب
     # read_only=True: لأننا نستخدمه للعرض حالياً، ولتجنب تعقيد الإنشاء في هذه المرحلة
-    books = BookSerializer(many=True, read_only=True)
+    books = Bookserializer(many=True, read_only=True)
 
     class Meta:
         model = Author
         fields = ['name', 'books']
-        
