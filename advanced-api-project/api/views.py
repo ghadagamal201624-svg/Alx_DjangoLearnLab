@@ -13,6 +13,10 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = '__all__'
+    search_fields = ['title', 'author']
+
 
 class BookDetailView(generics.RetrieveAPIView):
     """
@@ -21,7 +25,7 @@ class BookDetailView(generics.RetrieveAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    
+
     filter_backends = [filters.OrderingFilter] 
     ordering_fields = '__all__'
 
