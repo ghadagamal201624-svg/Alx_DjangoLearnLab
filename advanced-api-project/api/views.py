@@ -15,7 +15,7 @@ class BookListView(generics.ListAPIView):
 
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = '__all__'
-    search_fields = ['title', 'author']
+    search_fields = ['title', 'author', 'publication_year']
 
 
 class BookDetailView(generics.RetrieveAPIView):
