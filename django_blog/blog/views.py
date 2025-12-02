@@ -14,7 +14,8 @@ from django.views.generic import (
     UpdateView, 
     DeleteView
 )
-from .models import Post, Comment
+from .models import Post, Comment, tag
+from django.db.models import Q
 from .forms import CommentForm
 
 
@@ -108,7 +109,56 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
     
+# 1. البحث (Search View)
+def search(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        # البحث في العنوان أو المحتوى أو اسم التاج
+        results = Post.objects.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
 
+# 2. عرض المنشورات حسب التاج (Tag View)
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html' # نستخدم نفس قالب القائمة
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = get_object_or_404(Tag, name=tag_slug)
+        return Post.objects.filter(tags=tag).order_by('-published_date')
+
+# تأكد أن PostCreateView و PostUpdateView يستخدمون form_class = PostForm الجديد
+# بدلاً من fields = [...]
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm # استخدام الفورم المخصص
+    template_name = 'blog/post_form.html'
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostForm # استخدام الفورم المخصص
+    template_name = 'blog/post_form.html'
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+    
+    
 #view for registeration 
 def register(request):
     if request.method == 'post':
@@ -119,6 +169,8 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'blog/register.html', {'form':form})
+
+
 
 # view for profile 
 @login_required
