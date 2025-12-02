@@ -12,4 +12,34 @@
             </div>
         {% endif %}
     </article>
+
+    <hr>
+
+    <!-- قسم التعليقات -->
+    <h3>Comments</h3>
+    
+    <!-- زر إضافة تعليق -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'add-comment' object.pk %}">Add a Comment</a>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to add a comment.</p>
+    {% endif %}
+
+    <!-- عرض قائمة التعليقات -->
+    {% for comment in object.comments.all %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+            <p><strong>{{ comment.author }}</strong> said:</p>
+            <p>{{ comment.content }}</p>
+            <small>{{ comment.created_at }}</small>
+            
+            <!-- أزرار تعديل وحذف التعليق (لصاحب التعليق فقط) -->
+            {% if comment.author == user %}
+                <br>
+                <a href="{% url 'edit-comment' comment.pk %}">Edit</a> | 
+                <a href="{% url 'delete-comment' comment.pk %}">Delete</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
 {% endblock %}
