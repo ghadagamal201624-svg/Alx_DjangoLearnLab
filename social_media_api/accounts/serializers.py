@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-
+    serializers.CharField()
     password = serializers.CharField(write_only=True)
     bio = serializers.CharField(required=False)
 
