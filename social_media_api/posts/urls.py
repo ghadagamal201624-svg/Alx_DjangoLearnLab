@@ -11,4 +11,5 @@ urlpatterns = [
     # تتضمن جميع المسارات التي تم إنشاؤها بواسطة router (list, create, retrieve, update, destroy)
     path('', include(router.urls)), 
     path('feed/', UserFeedView.as_view(), name='user-feed'),
+    
 ]
