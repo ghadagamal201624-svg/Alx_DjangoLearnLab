@@ -40,9 +40,9 @@ class UserSerializer(serializers.ModelSerializer):
     """
     Serializer لعرض بيانات المستخدم الأساسية، يستخدم لـ UserListView ولعرض مؤلف المنشور.
     """
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'bio', 'profile_picture']
-
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ['id', 'username']
 # ملاحظة: يمكنك استخدام UserSerializer في 'posts/serializers.py' 
 # لعرض معلومات المؤلف، مما يلغي الحاجة لـ UserDisplaySerializer منفصل.
