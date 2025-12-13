@@ -7,46 +7,38 @@ class Post(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='posts',
-        verbose_name='المؤلف'
+        related_name='posts'
     )
-    title = models.CharField(max_length=255, verbose_name='العنوان')
-    # تأكد من وجود هذا السطر
-    content = models.TextField(verbose_name='المحتوى') 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاريخ الإنشاء')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='تاريخ التحديث')
+    title = models.CharField(max_length=255)
+    # هذا السطر يجب أن يكون موجوداً وواضحاً
+    content = models.TextField() 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = 'منشور'
-        verbose_name_plural = 'منشورات'
 
     def __str__(self):
-        return f'{self.title} by {self.author.username}'
-
+        return self.title
 
 class Comment(models.Model):
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='المنشور'
+        related_name='comments'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='المؤلف'
+        related_name='comments'
     )
-    # تأكد من وجود هذا السطر
-    content = models.TextField(verbose_name='المحتوى') 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاريخ الإنشاء')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='تاريخ التحديث')
+    # هذا السطر يجب أن يكون موجوداً وواضحاً
+    content = models.TextField() 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['created_at']
-        verbose_name = 'تعليق'
-        verbose_name_plural = 'تعليقات'
 
     def __str__(self):
-        return f'Comment by {self.author.username} on {self.post.title[:20]}...'
+        return f'Comment by {self.author.username} on {self.post.title}'
