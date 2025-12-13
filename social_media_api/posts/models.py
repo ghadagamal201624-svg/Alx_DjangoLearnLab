@@ -1,13 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-# الحصول على نموذج المستخدم النشط المحدد في settings.AUTH_USER_MODEL
 User = get_user_model()
 
 class Post(models.Model):
-    """
-    نموذج لـ Post (منشور) في منصة التواصل الاجتماعي.
-    """
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -15,7 +11,8 @@ class Post(models.Model):
         verbose_name='المؤلف'
     )
     title = models.CharField(max_length=255, verbose_name='العنوان')
-    content = models.TextField(verbose_name='المحتوى')
+    # تأكد من وجود هذا السطر
+    content = models.TextField(verbose_name='المحتوى') 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاريخ الإنشاء')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='تاريخ التحديث')
 
@@ -29,9 +26,6 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    """
-    نموذج لـ Comment (تعليق) على Post معين.
-    """
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -44,7 +38,8 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='المؤلف'
     )
-    content = models.TextField(verbose_name='المحتوى')
+    # تأكد من وجود هذا السطر
+    content = models.TextField(verbose_name='المحتوى') 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاريخ الإنشاء')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='تاريخ التحديث')
 
