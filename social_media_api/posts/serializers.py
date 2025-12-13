@@ -37,3 +37,17 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_comment_count(self, obj):
         return obj.comments.count()
+    
+# Serializer لعرض معلومات المستخدم بشكل مختصر داخل المنشور
+# Serializer لعرض معلومات المستخدم بشكل مختصر داخل المنشور
+class UserDisplaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+class PostSerializer(serializers.ModelSerializer):
+    user = UserDisplaySerializer(read_only=True) # لعرض مؤلف المنشور
+
+    class Meta:
+        model = Post
+        fields = ['id', 'user', 'content', 'created_at']
+        read_only_fields = ['user', 'created_at']

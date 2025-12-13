@@ -5,6 +5,8 @@ from .serializers import UserRegistrationSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .models import CustomUser
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 # View Register User
 @api_view(['POST'])
@@ -37,4 +39,32 @@ def user_login(request):
                 'user_id': user.pk
             }, status=status.HTTP_200_OK)
         
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+# View لمتابعة مستخدم
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        # المستخدم الذي يحاول المتابعة
+        follower = request.user
+        
+        # المستخدم المراد متابعته
+        try:
+            followed = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if follower == followed:
+            return Response(
+                {"detail": "You cannot follow yourself."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # إضافة المستخدم المراد متابعته إلى قائمة 'following' للمستخدم الحالي
+        follower.following.add(followed)
+
+
+        return Response(
+            {"detail": f"Successfully unfollowed user: {unfollowed.username}"},
+            status=status.HTTP_200_OK
+        )
