@@ -3,11 +3,15 @@
 from rest_framework import serializers
 from .models import CustomUser
 from django.contrib.auth.password_validation import validate_password
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
 
 # 1. Serializer لتسجيل المستخدمين الجدد
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True) # حقل لتأكيد كلمة المرور
+    # إضافة حقل Token للقراءة فقط لضمان تواجده في النتيجة
+    token = serializers.CharField(read_only=True)
 
     class Meta:
         model = CustomUser
@@ -28,12 +32,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('password2') 
         
         # إنشاء المستخدم الجديد
-        user = CustomUser.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
-            bio=validated_data.get('bio', '') # استخدام get لتجنب الخطأ إذا كان bio غير موجود
+            bio=validated_data.get('bio', '')
         )
+        token = Token.objects.create(user=user)
+        user.token = token.key
+        
         return user
 
 # 2. Serializer لعرض وتحديث بيانات الملف الشخصي (Profile)
