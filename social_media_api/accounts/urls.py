@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import FollowUserView, UnfollowUserView, register_user, user_login
+from .views import UserRegistrationView, UserLoginView, UserProfileView
 
 urlpatterns = [
-    # ...
-    path('register/', register_user, name='register'),
-    path('login/', user_login, name='login'),
-    # نقاط النهاية الجديدة
-    path('follow/<int:user_id>/', FollowUserView.as_view(), name='follow-user'),
-    path('unfollow/<int:user_id>/', UnfollowUserView.as_view(), name='unfollow-user'),
+    # المسار: /api/accounts/register
+    path('register/', UserRegistrationView.as_view(), name='user_register'),
+    
+    # المسار: /api/accounts/login
+    path('login/', UserLoginView.as_view(), name='user_login'),
+    
+    # المسار: /api/accounts/profile
+    path('profile/', UserProfileView.as_view(), name='user_profile'),
 ]

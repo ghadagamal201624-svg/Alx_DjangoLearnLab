@@ -1,48 +1,55 @@
+# accounts/serializers.py
+
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token 
+from .models import CustomUser
+from django.contrib.auth.password_validation import validate_password
 
-User = get_user_model()
-
-
+# 1. Serializer لتسجيل المستخدمين الجدد
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    bio = serializers.CharField(required=False)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True) # حقل لتأكيد كلمة المرور
 
     class Meta:
-        model = User
-        # تأكد من أن 'profile_picture' هو حقل موجود في نموذج المستخدم الخاص بك
-        fields = ['username', 'email', 'password', 'bio', 'profile_picture']
-        extra_kwargs = {'profile_picture': {'required': False}} # للتأكد من أنه اختياري
+        model = CustomUser
+        # الحقول المطلوبة للتسجيل
+        fields = ('username', 'email', 'password', 'password2', 'bio')
+        extra_kwargs = {
+            'email': {'required': True},
+            'bio': {'required': False}
+        }
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
 
     def create(self, validated_data):
-        # استخدام .pop() لإزالة الحقول التي لا يجب تمريرها إلى create_user مباشرة إذا لم يكن النموذج الخاص بك يدعمها جميعًا
-        password = validated_data.pop('password') 
+        # إزالة password2 لأنه ليس حقلاً في النموذج
+        validated_data.pop('password2') 
         
-        # إنشاء المستخدم
-        user = User.objects.create_user(
+        # إنشاء المستخدم الجديد
+        user = CustomUser.objects.create_user(
             username=validated_data['username'],
-            email=validated_data.get('email', ''),
-            password=password,
-            # يتم تمرير باقي البيانات (bio, profile_picture) كـ kwargs لـ create_user
-            **validated_data
+            email=validated_data['email'],
+            password=validated_data['password'],
+            bio=validated_data.get('bio', '') # استخدام get لتجنب الخطأ إذا كان bio غير موجود
         )
-
-        Token.objects.create(user=user)
-
         return user
 
-# -------------------------------------------------------------
-# 2. UserSerializer (مطلوب لـ generics.ListAPIView في accounts/views.py)
-# -------------------------------------------------------------
+# 2. Serializer لعرض وتحديث بيانات الملف الشخصي (Profile)
+class UserProfileSerializer(serializers.ModelSerializer):
+    # لحساب عدد المتابعين والمتابَعين
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
 
-class UserSerializer(serializers.ModelSerializer):
-    """
-    Serializer لعرض بيانات المستخدم الأساسية، يستخدم لـ UserListView ولعرض مؤلف المنشور.
-    """
-    class UserSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = User
-            fields = ['id', 'username']
-# ملاحظة: يمكنك استخدام UserSerializer في 'posts/serializers.py' 
-# لعرض معلومات المؤلف، مما يلغي الحاجة لـ UserDisplaySerializer منفصل.
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'email', 'bio', 'profile_picture', 'followers_count', 'following_count')
+        read_only_fields = ('username', 'email') # لن نسمح بتغيير اسم المستخدم والبريد عبر هذا الـ Serializer
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()
+
+    def get_following_count(self, obj):
+        # تذكر أننا استخدمنا related_name='following'
+        return obj.following.count()
