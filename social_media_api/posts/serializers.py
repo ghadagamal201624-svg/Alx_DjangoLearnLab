@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import Post
-from accounts.models import CustomUser # استيراد نموذج المستخدم المخصص
+try:
+    from ..accounts.models import CustomUser # استيراد نموذج المستخدم المخصص
+except ImportError:
+    from .accounts.models import CustomUser
 
 # Serializer لعرض معلومات المستخدم بشكل مختصر داخل المنشور
 class UserDisplaySerializer(serializers.ModelSerializer):
