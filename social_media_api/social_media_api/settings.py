@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!ic^13c=(34@c&st0m)u3064x4rnb_uql_6o+ed2*f6q_y#(s*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['your-app-name.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -134,3 +135,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10, # عدد المنشورات في الصفحة الواحدة
 }
+
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True # تفعيل هذا يتطلب وجود SSL (HTTPS)
+
+# إعدادات الملفات الثابتة (Static Files)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_PATH, 'staticfiles') # BASE_PATH أو BASE_DIR حسب مشروعك
